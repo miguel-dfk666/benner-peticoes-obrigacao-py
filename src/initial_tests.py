@@ -71,11 +71,11 @@ class AutomacaoSantanderBenner():
             numero_dossie = row['Número Integração']
             print(f"Dossiê: {numero_dossie}")
             
-            textentry = WebDriverWait(self.driver, 20).until(EC.prsence_of_element_located((By.XPATH, '//*[@id="ctl00_Main_WFL_TASKS_INBOX_FilterControl_GERAL_1__TITULO"]')))
+            textentry = self.driver.find_element(By.XPATH, "//input[contains(@id,'ctl00_Main_WFL_TASKS_INBOX_FilterControl_GERAL_1__TITULO')]")
             textentry.send_keys(str(numero_dossie))
             time.sleep(1)
             
-            self.driver.find_element(BY.XPATH,'//*[@id="ctl00_Main_WFL_TASKS_INBOX_FilterControl_FilterButton"]').click()
+            self.driver.find_element(By.XPATH,'//*[@id="ctl00_Main_WFL_TASKS_INBOX_FilterControl_FilterButton"]').click()
             time.sleep(3)
           except Exception as e:
             print(f"Error: {e}")          
@@ -90,7 +90,7 @@ class AutomacaoSantanderBenner():
   # clicar em concluir
   # seguir para o próximo dossiê
   # deletar o numero já concluido
-  # mover o numero já concluido para uma próxima planilha
+  # mover o numero já concluido para uma próxima planilha 
   # se der error reiniciar o driver
     def reiniciar_programa(self):
       self.driver.quit()
