@@ -69,6 +69,7 @@ class AutomacaoSantanderBenner():
         for index, row in self.df.iterrows():  
           try:   
             numero_dossie = row['Número Integração']
+            numero_codigo = row['Número Localizador']
             print(f"Dossiê: {numero_dossie}")
             
             textentry = self.driver.find_element(By.XPATH, "//input[contains(@id,'ctl00_Main_WFL_TASKS_INBOX_FilterControl_GERAL_1__TITULO')]")
@@ -77,8 +78,16 @@ class AutomacaoSantanderBenner():
             
             self.driver.find_element(By.XPATH,'//*[@id="ctl00_Main_WFL_TASKS_INBOX_FilterControl_FilterButton"]').click()
             time.sleep(3)
+            
+            # of = WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH,f"//td[@class='text-left'][contains(.,'Peticionar em Juízo - Obrigação de fazer - Dossiê: {numero_dossie} - Código: {numero_codigo}')]")))          
+            elemnto_click = WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ctl00_Main_WFL_TASKS_INBOX_SimpleGrid"]/tbody/tr[1]/td[3]/a')))
+            self.driver.execute_script("arguments[0].click()", elemnto_click)
+            time.sleep(4)
+            
+            WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="top-CMD_ANEXARPETICAO"]'))).click()
           except Exception as e:
-            print(f"Error: {e}")          
+            print(f"Error: {e}")
+          
           
   # clicar na tarefa
   # clicar em anexar
