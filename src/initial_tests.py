@@ -12,7 +12,6 @@ from selenium.webdriver.common.by import By
 import pandas as pd
 import time
 import pyautogui
-import win32com.client as win32
 import os
 from datetime import datetime
 import numpy as np
@@ -22,7 +21,15 @@ import numpy as np
 class AutomacaoSantanderBenner():
   # Ler Exel
     def __init__(self):
-      self.driver = webdriver.Chrome()
+      options = webdriver.ChromeOptions()
+      options.add_experimental_option("prefs", {
+        "download.prompt_for_download": False,
+        "download.directory_upgrade": True,
+        "safebrowsing.enabled": True
+      })
+      # Service initialization parameters
+      service = Service(ChromeDriverManager().install())
+      self.driver = webdriver.Chrome(service=service, options=options)
       self.df = None
       self.df = pd.read_excel('Pasta1.xlsx')
       # self.new_df = pd.read_excel('analisado.xlsx')
@@ -60,6 +67,7 @@ class AutomacaoSantanderBenner():
       
   # procurar pelo dossiê
     def pesquisar_processo(self):
+       # clicar na tarefa
       tarefas_button = WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="tarefas"]/a')))
       tarefas_button.click()
       time.sleep(5)
@@ -82,25 +90,30 @@ class AutomacaoSantanderBenner():
             # of = WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH,f"//td[@class='text-left'][contains(.,'Peticionar em Juízo - Obrigação de fazer - Dossiê: {numero_dossie} - Código: {numero_codigo}')]")))          
             elemnto_click = WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ctl00_Main_WFL_TASKS_INBOX_SimpleGrid"]/tbody/tr[1]/td[3]/a')))
             self.driver.execute_script("arguments[0].click()", elemnto_click)
-            time.sleep(4)
+            time.sleep(0.5)
+
+            self.driver.find_element(By.ID, "top-CMD_ANEXARPETICAO").click()
             
-            WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="top-CMD_ANEXARPETICAO"]'))).click()
+            
+
+
+
+            # clicar em anexar
+            # inserir  nome
+            # inserir pasta acordo principal
+            # inserir arquivo
+            # salvar
+            # clicar em editar
+            # clicar em concluir
+            # seguir para o próximo dossiê
+            # deletar o numero já concluido
+            # mover o numero já concluido para uma próxima planilha 
+            # se der error reiniciar o driver
           except Exception as e:
             print(f"Error: {e}")
           
-          
-  # clicar na tarefa
-  # clicar em anexar
-  # inserir  nome
-  # inserir pasta acordo principal
-  # inserir arquivo
-  # salvar
-  # clicar em editar
-  # clicar em concluir
-  # seguir para o próximo dossiê
-  # deletar o numero já concluido
-  # mover o numero já concluido para uma próxima planilha 
-  # se der error reiniciar o driver
+  
+
     def reiniciar_programa(self):
       self.driver.quit()
       # Aguardar antes de reiniciar
