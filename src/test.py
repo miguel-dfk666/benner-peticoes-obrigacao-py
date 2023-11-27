@@ -9,12 +9,14 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
+from datetime import datetime
+from ..config import LOGIN, PASSWORD
 import pandas as pd
 import time
 import pyautogui
 import os
-from datetime import datetime
 import numpy as np
+
 
 
 # iniciar webdriver
@@ -43,10 +45,10 @@ class AutomacaoSantanderBenner():
   # fazer login no benner
     def logar_santander(self):
       login_input = WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.ID, "userLogin__input")))
-      login_input.send_keys("EX26078")
+      login_input.send_keys(LOGIN)
       time.sleep(2)
       password_input = self.driver.find_element(By.ID, "userPassword__input")
-      password_input.send_keys("@Fer2305")
+      password_input.send_keys(PASSWORD)
       time.sleep(2)
       login_button = self.driver.find_element(By.XPATH, "/html/body/app/ui-view/login/div/div/div/div/div[2]/div[3]/button[2]")
       login_button.click()
