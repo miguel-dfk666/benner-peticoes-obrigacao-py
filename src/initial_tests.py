@@ -91,15 +91,20 @@ class AutomacaoSantanderBenner():
             elemnto_click = WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ctl00_Main_WFL_TASKS_INBOX_SimpleGrid"]/tbody/tr[1]/td[3]/a')))
             self.driver.execute_script("arguments[0].click()", elemnto_click)
             time.sleep(0.5)
-
-            self.driver.find_element(By.ID, "top-CMD_ANEXARPETICAO").click()
             
             
-
-
-
             # clicar em anexar
+            self.driver.execute_script("__doPostBack('ctl00$Main$K9_INFORMAES','CMD_ANEXARPETICAO')")
+           
+            
+            # Alterar para iframe
+            iframe_xpath = '//*[@id="ModalCommand_modal"]/div/div/div[2]/iframe'
+            WebDriverWait(self.driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH, iframe_xpath)))
+            
+            
             # inserir  nome
+            nome = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//input[@id='ctl00_Main_PR_PROCESSODOCUMENTOS_FORM_PageControl_GERAL_GERAL_NOME']")))
+            nome.send_keys("Peticionar em Juízo")
             # inserir pasta acordo principal
             # inserir arquivo
             # salvar
