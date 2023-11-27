@@ -130,17 +130,31 @@ class AutomacaoSantanderBenner():
             self.driver.execute_script("javascript:__doPostBack('ctl00$Main$PR_PROCESSODOCUMENTOS_FORM','Save')")
             time.sleep(6)
             
+            # Clicar no botão X
+            self.driver.switch_to.parent_frame()
+            self.driver.find_element(By.XPATH, '//*[@id="ModalCommand_modalCloseButton"]').click()
+            
             # clicar em editar
             self.driver.execute_script("javascript:__doPostBack('ctl00$Main$K9_INFORMAES','Edit')")
             
             # clicar em concluir
             time.sleep(5)
             self.driver.execute_script("javascript:__doPostBack('ctl00$Main$K9_INFORMAES','Finish')")
+          
+            # Exclua a linha no DataFrame original
+            self.df.drop(index, inplace=True)
+            time.sleep(5)
+
+            # Salva a planilha atualizada
+            self.df.to_excel("Pasta1.xlsx", index=False)
+            self.new_df.to_excel('analisado.xlsx', index=False)
             
-            # seguir para o próximo dossiê
-            # deletar o numero já concluido
-            # mover o numero já concluido para uma próxima planilha 
-            # se der error reiniciar o driver
+            
+            documento = str(row['Documentos'])
+            if documento.lower() == 'nan':
+                print("Encerrando o programa, pois a entrada é NaN.")
+                self.driver.quit()
+                break
           except Exception as e:
             print(f"Error: {e}")
           
@@ -151,6 +165,7 @@ class AutomacaoSantanderBenner():
       # Aguardar antes de reiniciar
       print("Reiniciando o programa em 3 segundos...")
       time.sleep(3)
+      self.executar()
       
       
   # Executar programa
