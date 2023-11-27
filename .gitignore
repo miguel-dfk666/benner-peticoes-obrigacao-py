@@ -1,4 +1,4 @@
 /.pytest_cache
 /.vscode
 /.main_code.py
-config.py
+.env

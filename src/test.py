@@ -10,7 +10,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from datetime import datetime
-from ..config import LOGIN, PASSWORD
+from dotenv import load_dotenv
 import pandas as pd
 import time
 import pyautogui
@@ -29,6 +29,9 @@ class AutomacaoSantanderBenner():
         "download.directory_upgrade": True,
         "safebrowsing.enabled": True
       })
+      load_dotenv()  # Carrega as variáveis do arquivo .env
+      self.login = os.getenv('LOGIN')
+      self.password = os.getenv('PASSWORD')
       # Service initialization parameters
       service = Service(ChromeDriverManager().install())
       self.driver = webdriver.Chrome(service=service, options=options)
@@ -36,7 +39,16 @@ class AutomacaoSantanderBenner():
       self.df = pd.read_excel('Pasta1.xlsx')
       # self.new_df = pd.read_excel('analisado.xlsx')
       
-      
+    def verificar_arquivo_e_fechar_driver(self):
+      nome_arquivo = 'Pasta1.xlsx'
+      tamanho = os.path.getsize(nome_arquivo)
+      if tamanho == 0:
+          print("O arquivo está vazio. Fechando o driver.")
+          self.driver.quit()  # Fecha o driver
+
+
+          
+          
   # acessar benner
     def conectar_internet(self):
       self.driver.get("https://www.santandernegocios.com.br/portaldenegocios/#/externo")
@@ -44,11 +56,12 @@ class AutomacaoSantanderBenner():
       
   # fazer login no benner
     def logar_santander(self):
+      self.verificar_arquivo_e_fechar_driver()
       login_input = WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.ID, "userLogin__input")))
-      login_input.send_keys(LOGIN)
+      login_input.send_keys(self.login)
       time.sleep(2)
       password_input = self.driver.find_element(By.ID, "userPassword__input")
-      password_input.send_keys(PASSWORD)
+      password_input.send_keys(self.password)
       time.sleep(2)
       login_button = self.driver.find_element(By.XPATH, "/html/body/app/ui-view/login/div/div/div/div/div[2]/div[3]/button[2]")
       login_button.click()
