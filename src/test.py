@@ -56,7 +56,6 @@ class AutomacaoSantanderBenner():
       
   # fazer login no benner
     def logar_santander(self):
-      self.verificar_arquivo_e_fechar_driver()
       login_input = WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.ID, "userLogin__input")))
       login_input.send_keys(self.login)
       time.sleep(2)
@@ -66,6 +65,7 @@ class AutomacaoSantanderBenner():
       login_button = self.driver.find_element(By.XPATH, "/html/body/app/ui-view/login/div/div/div/div/div[2]/div[3]/button[2]")
       login_button.click()
       time.sleep(6)
+
         
         
   # Mover para Segunda tela do benner
@@ -190,6 +190,7 @@ class AutomacaoSantanderBenner():
               self.conectar_internet()
               self.logar_santander()
               self.ir_para_segunda_tela()
+              self.verificar_arquivo_e_fechar_driver()
               self.pesquisar_processo()
           except Exception as e:
               print(f"Erro: {e}")
