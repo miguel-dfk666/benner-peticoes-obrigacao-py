@@ -46,7 +46,7 @@ class AutomacaoSantanderBenner():
       login_input.send_keys("EX26078")
       time.sleep(2)
       password_input = self.driver.find_element(By.ID, "userPassword__input")
-      password_input.send_keys("@fer2305")
+      password_input.send_keys("@Fer2305")
       time.sleep(2)
       login_button = self.driver.find_element(By.XPATH, "/html/body/app/ui-view/login/div/div/div/div/div[2]/div[3]/button[2]")
       login_button.click()
@@ -104,12 +104,39 @@ class AutomacaoSantanderBenner():
             
             # inserir  nome
             nome = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//input[@id='ctl00_Main_PR_PROCESSODOCUMENTOS_FORM_PageControl_GERAL_GERAL_NOME']")))
-            nome.send_keys("Peticionar em Juízo")
-            # inserir pasta acordo principal
+            nome.send_keys(str(row["Ação"]))
+            time.sleep(2)
+            
+            # inserir pasta corpo principal
+            pasta = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ctl00_Main_PR_PROCESSODOCUMENTOS_FORM_PageControl_GERAL_GERAL"]/div[1]/div[4]/div/span/div/span[1]/span[1]/span')))
+            pasta.click()
+            self.driver.find_element(By.XPATH, '//*[@id="ctl00_Body"]/span/span/span[1]/input').send_keys('Corpo Principal')
+            time.sleep(2)
+            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.XPATH, '//*[@id="select2-ctl00_Main_PR_PROCESSODOCUMENTOS_FORM_PageControl_GERAL_GERAL_ctl19_ctl01_select-results"]/li'))).click()
+            time.sleep(3)
+            
             # inserir arquivo
+            self.driver.find_element(By.XPATH, '//*[@id="ctl00_Main_PR_PROCESSODOCUMENTOS_FORM_PageControl_GERAL_GERAL_dropzone_ARQUIVO"]').click()
+            time.sleep(2)
+            
+            
+            self.df.loc[self.df['Documentos'] == 'Documentos']
+            pyautogui.write(str(row['Documentos']))
+            time.sleep(2)
+            pyautogui.press('enter')
+            time.sleep(10)
+            
             # salvar
+            self.driver.execute_script("javascript:__doPostBack('ctl00$Main$PR_PROCESSODOCUMENTOS_FORM','Save')")
+            time.sleep(6)
+            
             # clicar em editar
+            self.driver.execute_script("javascript:__doPostBack('ctl00$Main$K9_INFORMAES','Edit')")
+            
             # clicar em concluir
+            time.sleep(5)
+            self.driver.execute_script("javascript:__doPostBack('ctl00$Main$K9_INFORMAES','Finish')")
+            
             # seguir para o próximo dossiê
             # deletar o numero já concluido
             # mover o numero já concluido para uma próxima planilha 
