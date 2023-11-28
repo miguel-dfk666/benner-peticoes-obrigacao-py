@@ -192,6 +192,7 @@ class AutomacaoSantanderBenner():
               self.ir_para_segunda_tela()
               self.verificar_arquivo_e_fechar_driver()
               self.pesquisar_processo()
+              break
           except Exception as e:
               print(f"Erro: {e}")
 
